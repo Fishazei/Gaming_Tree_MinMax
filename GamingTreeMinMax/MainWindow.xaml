@@ -9,47 +9,54 @@
     <Grid Background="LightGray">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="9*"/>
-            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="4*"/>
         </Grid.ColumnDefinitions>
         <Canvas x:Name="TreeCanvas" Background="White" Grid.Row="1" Margin="10,10,10,10"/>
-        <!-- Свойства генерации дерева, а также кнопка загрузки дерева из варианта -->
-        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top"
-                    Margin="0,10,0,0" Grid.Column="1" Background="White" Width="103">
-            <TextBlock Text="Генерация" TextAlignment="Center" FontWeight="Bold" Margin="0,5"/>
+        
+        <StackPanel Grid.Column="1">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <!-- Свойства генерации дерева, а также кнопка загрузки дерева из варианта -->
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top"
+         Margin="0,10,0,0" Grid.Column="1" Background="White" Width="103" Height="140">
+                    <TextBlock Text="Генерация" TextAlignment="Center" FontWeight="Bold" Margin="0,5"/>
 
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Глубина:" Margin="2,2,11,2"/>
-                <TextBox x:Name="DepthInput" Width="40" Text="3"/>
-            </StackPanel>
-            <TextBlock Text="Ветвление:" Margin="2,2"/>
-            <StackPanel Orientation="Horizontal">
-                <TextBox x:Name="BranchingInputMin" Width="40" Text="3"/>
-                <TextBlock Text=" до " Margin="0"/>
-                <TextBox x:Name="BranchingInputMax" Width="40" Text="3"/>
-            </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Глубина:" Margin="2,2,11,2"/>
+                        <TextBox x:Name="DepthInput" Width="40" Text="3"/>
+                    </StackPanel>
+                    <TextBlock Text="Ветвление:" Margin="2,2"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox x:Name="BranchingInputMin" Width="40" Text="3"/>
+                        <TextBlock Text=" до " Margin="0"/>
+                        <TextBox x:Name="BranchingInputMax" Width="40" Text="3"/>
+                    </StackPanel>
 
-            <Button Content="Сгенерировать" Click="GenerateTreeButton_Click" Width="90" Margin="5,5"/>
-            <Button Content="Загрузить" Click="LoadTreeButton_Click" Width="90" Margin="0,0,0,5"/>
-        </StackPanel>
-        <!-- Задание свойств дерева без генерации нового -->
-        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top"
-                    Margin="0,155,0,0" Grid.Column="1" Background="White" Width="103">
-            <TextBlock Text="Свойства" TextAlignment="Center" FontWeight="Bold" Margin="0,5"/>
-            <Button Content="Min/Max" Click="ToggleRootPlayer_Click" Width="90"/>
-            <!-- Список листьев -->
-            <StackPanel Orientation="Horizontal" Margin="5">
-                <TextBlock Text="Лист " Margin="5,3,5,0" />
-                <ComboBox x:Name="LeafSelector" Width="53" DisplayMemberPath="Value" />
+                    <Button Content="Сгенерировать" Click="GenerateTreeButton_Click" Width="90" Margin="5,5"/>
+                    <Button Content="Загрузить" Click="LoadTreeButton_Click" Width="90" Margin="0,0,0,5"/>
+                </StackPanel>
+                <!-- Задание свойств дерева без генерации нового -->
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top"
+                            Margin="10,10,0,0" Grid.Column="1" Background="White" Width="103" Height="140">
+                    <TextBlock Text="Свойства" TextAlignment="Center" FontWeight="Bold" Margin="0,10,0,5"/>
+                    <Button Content="Min/Max" Click="ToggleRootPlayer_Click" Width="90"/>
+                    <!-- Список листьев -->
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <TextBlock Text="Лист " Margin="5,3,5,0" />
+                        <ComboBox x:Name="LeafSelector" Width="53" DisplayMemberPath="Value" />
+                    </StackPanel>
+                    <!-- Поле для изменения значения -->
+                    <TextBox x:Name="LeafValueInput" Margin="5,0" />
+                    <Button Content="Изменить" Click="UpdateLeafValue_Click" Margin="5" />
+                </StackPanel>
             </StackPanel>
-            <!-- Поле для изменения значения -->
-            <TextBox x:Name="LeafValueInput" Margin="5,0" />
-            <Button Content="Изменить" Click="UpdateLeafValue_Click" Margin="5" />
-        </StackPanel>
-        <!-- Настройка и активация алгоритма -->
-        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top"
-            Margin="0,289,0,0" Grid.Column="1" Background="White" Width="103">
-            <TextBlock Text="Алгоритм" TextAlignment="Center" FontWeight="Bold" Margin="0,5"/>
-            
+            <!-- Настройка и активация алгоритма -->
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top"
+            Margin="0,10,0,0" Grid.Column="1" Background="White" Width="103">
+                <TextBlock Text="Алгоритм" TextAlignment="Center" FontWeight="Bold" Margin="0,5"/>
+                
+                <RadioButton Content="A/B отсечения" Margin="2.5,5"/>
+                <Button Content="Запуск" Width="90" Margin="5"  Click="RunMinimax_Click"/>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </Window>

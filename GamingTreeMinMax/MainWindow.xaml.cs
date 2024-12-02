@@ -76,5 +76,21 @@ namespace GamingTreeMinMax
             }
         }
 
+        private void RunMinimax_Click(object sender, RoutedEventArgs e)
+        {
+            if (_tree == null) return;
+
+            var solver = new MinimaxSolver(_tree.Root, true, 3);
+            solver.Start();
+
+            string info;
+            while (solver.Step(out info))
+            {
+                Debug.WriteLine(info);
+                _renderer.RenderTree(_tree);
+
+                //Thread.Sleep(100);
+            }
+        }
     }
 }

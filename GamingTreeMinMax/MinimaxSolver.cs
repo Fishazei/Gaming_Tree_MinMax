@@ -45,8 +45,8 @@ namespace GamingTreeMinMax
 
             if (node.Children.Count == 0 || _currentDepth >= MaxDepth) // Лист или лимит глубины
             {
-                node.Value = node.Value ?? 0; // Если значения нет, считаем 0
-                debugInfo = $"Лист {node.Value}, глубина {_currentDepth}.";
+                //node.Value = node.Value ?? 0; // Если значения нет, считаем 0
+                debugInfo = $"Лист {node.Value ?? 0}, глубина {_currentDepth}.";
                 return true;
             }
 
@@ -77,7 +77,6 @@ namespace GamingTreeMinMax
                     break;
                 }
             }
-            Debug.WriteLine(debugInfo);
             node.Value = bestValue;
             return true;
         }

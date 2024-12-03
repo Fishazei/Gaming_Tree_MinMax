@@ -77,11 +77,9 @@ namespace GamingTreeMinMax
         {
             if (AlphaBetaToggle.IsChecked == true)
             {
-                // Если уже активен, деактивируем
                 AlphaBetaToggle.IsChecked = false;
-                e.Handled = true; // Предотвращаем стандартное поведение
+                e.Handled = true;
             }
-            // В противном случае WPF выполнит стандартное переключение
         }
 
         // Переключение порядка обхода
@@ -92,17 +90,15 @@ namespace GamingTreeMinMax
         {
             if (LeftRightToggle.IsChecked == true)
             {
-                // Если уже активен, деактивируем
                 LeftRightToggle.IsChecked = false;
-                e.Handled = true; // Предотвращаем стандартное поведение
+                e.Handled = true;
             }
-            // В противном случае WPF выполнит стандартное переключение
         }
 
         private void RunMinimax_Click(object sender, RoutedEventArgs e)
         {
             if (_tree == null) return; 
-            _solvedTree = _tree;
+            _solvedTree = _tree.DeepCopy();
 
             MinimaxSolver solver = new MinimaxSolver(_solvedTree.Root)
             {
@@ -123,5 +119,6 @@ namespace GamingTreeMinMax
             }
             _renderer.RenderTree( _solvedTree);
         }
+
     }
 }

@@ -16,14 +16,12 @@ namespace GamingTreeMinMax
         {
             IsMaxNode = isMaxNode;
         }
-
         // Метод добавления дочернего элемента
         public void AddChild(TreeElement child)
         {
             child.Parent = this;
             Children.Add(child);
         }
-
         public void SetChild(int count, ObservableCollection<TreeElement> forLeaves = null)
         {
             Children.Clear();
@@ -36,6 +34,25 @@ namespace GamingTreeMinMax
                     forLeaves.Add(Children[i]);
                 }
             }
+        }
+
+        public TreeElement DeepCopy()
+        {
+            var copy = new TreeElement(IsMaxNode);
+            copy.Value = this.Value;
+            copy.IsMaxNode = this.IsMaxNode;
+            copy.IsPruned = this.IsPruned;
+            copy.PruneReason = this.PruneReason;
+            copy.IsOptimalPath = this.IsOptimalPath;
+
+            foreach (var child in this.Children)
+            {
+                var childCopy = child.DeepCopy();
+                childCopy.Parent = copy; // Устанавливаем ссылку на нового родителя
+                copy.Children.Add(childCopy);
+            }
+
+            return copy;
         }
     }
 }

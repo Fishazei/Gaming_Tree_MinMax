@@ -78,8 +78,8 @@ namespace GamingTreeMinMax
                     {
                         // Добавляем текст только для первого отсечённого узла
                         string condition = isMaximizing
-                            ? $"z <= Alpha ({alpha})"
-                            : $"z >= Beta ({beta})";
+                            ? $"z <= α({alpha})"
+                            : $"z >= β({beta})";
                         child.PruneReason = $"{condition}";
                         PrunedNodes.Add((child, child.PruneReason));
                     }

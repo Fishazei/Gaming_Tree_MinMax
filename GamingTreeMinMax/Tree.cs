@@ -19,7 +19,6 @@ namespace GamingTreeMinMax
             BranchingMin = branMin;
             Root = GenerateTree(depth, isMaxRoot);
         }
-
         // Метод для генерации дерева случайной структуры с указанной глубиной и ветвлением
         private TreeElement GenerateTree(int depth, bool isMaxNode)
         {
@@ -42,7 +41,6 @@ namespace GamingTreeMinMax
             }
             return node;
         }
-
         // Создание дерева из Варианта
         public void LoadTree()
         {
@@ -89,7 +87,6 @@ namespace GamingTreeMinMax
             Root.Children.Clear();
             Root = root;
         }
-
         // Изменение порядка мин/макс
         internal void ToggleRootPlayer()
         {
@@ -107,7 +104,6 @@ namespace GamingTreeMinMax
                 UpdatePlayerRoles(child, !isMaxNode);
             }
         }
-
         // Обновление данных в листе
         public void UpdateLeafValue(TreeElement leaf, int newValue)
         {
@@ -116,6 +112,49 @@ namespace GamingTreeMinMax
                 leaf.Value = newValue;
             }
         }
+        // Копирование дерева
+        public Tree DeepCopy()
+        {
+            // Копируем корень дерева
+            var copiedRoot = Root.DeepCopy();
 
+            // Создаём новое дерево
+            var copiedTree = new Tree(Depth, BranchingMin, BranchingMax, Root.IsMaxNode)
+            {
+                Root = copiedRoot,
+                Leaves = new ObservableCollection<TreeElement>()
+            };
+
+            // Копируем листья
+            foreach (var leaf in Leaves)
+            {
+                // Находим соответствующий узел в скопированном дереве
+                var copiedLeaf = FindCopiedLeaf(copiedRoot, leaf);
+                if (copiedLeaf != null)
+                {
+                    copiedTree.Leaves.Add(copiedLeaf);
+                }
+            }
+
+            return copiedTree;
+        }
+        // Вспомогательный метод для поиска копии узла в новом дереве
+        private TreeElement? FindCopiedLeaf(TreeElement copiedNode, TreeElement originalLeaf)
+        {
+            if (copiedNode == null)
+                return null;
+
+            if (originalLeaf == copiedNode)
+                return copiedNode;
+
+            foreach (var child in copiedNode.Children)
+            {
+                var result = FindCopiedLeaf(child, originalLeaf);
+                if (result != null)
+                    return result;
+            }
+
+            return null;
+        }
     }
 }

@@ -87,7 +87,7 @@ namespace GamingTreeMinMax
             {
                 Width = 30,
                 Height = 30,
-                Fill = node.IsMaxNode ? Brushes.LightBlue : Brushes.LightCoral,
+                Fill = node.IsPruned ? Brushes.Gray : node.IsMaxNode ? Brushes.LightBlue : Brushes.LightCoral,
                 Stroke = node.IsPruned ? Brushes.Gray : Brushes.Black,
                 StrokeThickness = node.IsOptimalPath ? 4 : 2
             };

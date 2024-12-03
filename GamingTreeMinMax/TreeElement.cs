@@ -1,4 +1,6 @@
-﻿namespace GamingTreeMinMax
+﻿using System.Collections.ObjectModel;
+
+namespace GamingTreeMinMax
 {
     public class TreeElement
     {
@@ -7,6 +9,8 @@
         public int? Value { get; set; } // Nullable, так как у промежуточных узлов значение может отсутствовать
         public bool IsMaxNode { get; set; }
         public bool IsPruned { get; set; }
+        public string? PruneReason { get; set; } // Причина отсечения
+        public bool IsOptimalPath { get; set; } // Оптимальный путь
 
         public TreeElement(bool isMaxNode)
         {
@@ -20,49 +24,18 @@
             Children.Add(child);
         }
 
-        // Метод для вычисления оценки узла на основе минимаксного алгоритма
-        /*
-        public int CalculateMinimax(int alpha, int beta)
+        public void SetChild(int count, ObservableCollection<TreeElement> forLeaves = null)
         {
-            // Если это лист, возвращаем его значение
-            if (Children.Count == 0 && Value.HasValue)
+            Children.Clear();
+            for (int i = 0; i < count; i++)
             {
-                return Value.Value;
-            }
-
-            int bestValue;
-            if (IsMaxNode)
-            {
-                bestValue = int.MinValue;
-                foreach (var child in Children)
+                Children.Add(new TreeElement(!IsMaxNode));
+                Children[i].Parent = this;
+                if (forLeaves != null)  // Добавление листьев в список листьев дерева
                 {
-                    int childValue = child.CalculateMinimax(alpha, beta);
-                    bestValue = System.Math.Max(bestValue, childValue);
-                    alpha = System.Math.Max(alpha, bestValue);
-                    if (beta <= alpha)
-                    {
-                        child.IsPruned = true; // Отмечаем узел как отсеченный
-                        break;
-                    }
+                    forLeaves.Add(Children[i]);
                 }
             }
-            else
-            {
-                bestValue = int.MaxValue;
-                foreach (var child in Children)
-                {
-                    int childValue = child.CalculateMinimax(alpha, beta);
-                    bestValue = System.Math.Min(bestValue, childValue);
-                    beta = System.Math.Min(beta, bestValue);
-                    if (beta <= alpha)
-                    {
-                        child.IsPruned = true;
-                        break;
-                    }
-                }
-            }
-            return bestValue;
         }
-        */
     }
 }

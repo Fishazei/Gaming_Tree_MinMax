@@ -53,8 +53,17 @@
             <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top"
             Margin="0,10,0,0" Grid.Column="1" Background="White" Width="103">
                 <TextBlock Text="Алгоритм" TextAlignment="Center" FontWeight="Bold" Margin="0,5"/>
-                
-                <RadioButton Content="A/B отсечения" Margin="2.5,5"/>
+                <StackPanel>
+                    <RadioButton x:Name="AlphaBetaToggle"  Content="A/B отсечения" Margin="2.5,5" Checked="AlphaBetaToggle_Checked"
+                                                    Unchecked="AlphaBetaToggle_Unchecked" 
+                                                    PreviewMouseLeftButtonDown="AlphaBetaToggle_PreviewMouseLeftButtonDown"/>
+                </StackPanel>
+                <StackPanel>
+                    <RadioButton x:Name="LeftRightToggle" Content="R->L" Margin="2.5,5" 
+                             Checked="LeftRightToggle_Checked"
+                             Unchecked="LeftRightToggle_Unchecked" 
+                             PreviewMouseLeftButtonDown="LeftRightToggle_PreviewMouseLeftButtonDown"/>
+                </StackPanel>
                 <Button Content="Запуск" Width="90" Margin="5"  Click="RunMinimax_Click"/>
             </StackPanel>
         </StackPanel>

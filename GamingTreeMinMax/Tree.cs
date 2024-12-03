@@ -42,12 +42,52 @@ namespace GamingTreeMinMax
             }
             return node;
         }
-        
-        // Создание дерева из Варианта
-        private TreeElement LoadTree()
-        {
 
-            return null;
+        // Создание дерева из Варианта
+        public void LoadTree()
+        {
+            List<int> leavesVal = new List<int>{ 0, 0, 2, 1, -2, 1, -3, 5, 4, 6, 5, 5, 4, 3, 7, 5, 4, 2, 1, 2, 1, 0, 1, 2, 0, -2, 1, 0, 2, -1, 0, 1, 2, 3, 2};
+            Leaves = new ObservableCollection<TreeElement>();
+
+            TreeElement root = new TreeElement(true);
+            // Корень-1
+            root.SetChild(3);
+            // Глубина 1-2
+            root.Children[0].SetChild(2);
+            root.Children[1].SetChild(3);
+            root.Children[2].SetChild(2);
+            // Глубина 2-3
+            root.Children[0].Children[0].SetChild(3);
+            root.Children[0].Children[1].SetChild(3);
+            root.Children[1].Children[0].SetChild(2);
+            root.Children[1].Children[1].SetChild(2);
+            root.Children[1].Children[2].SetChild(2);
+            root.Children[2].Children[0].SetChild(2);
+            root.Children[2].Children[1].SetChild(1);
+            // Глубина 3-листья
+            root.Children[0].Children[0].Children[0].SetChild(2, Leaves);
+            root.Children[0].Children[0].Children[1].SetChild(2, Leaves);
+            root.Children[0].Children[0].Children[2].SetChild(3, Leaves);
+            root.Children[0].Children[1].Children[0].SetChild(2, Leaves);
+            root.Children[0].Children[1].Children[1].SetChild(3, Leaves);
+            root.Children[0].Children[1].Children[2].SetChild(3, Leaves);
+            root.Children[1].Children[0].Children[0].SetChild(2, Leaves);
+            root.Children[1].Children[0].Children[1].SetChild(2, Leaves);
+            root.Children[1].Children[1].Children[0].SetChild(2, Leaves);
+            root.Children[1].Children[1].Children[1].SetChild(3, Leaves);
+            root.Children[1].Children[2].Children[0].SetChild(2, Leaves);
+            root.Children[1].Children[2].Children[1].SetChild(2, Leaves);
+            root.Children[2].Children[0].Children[0].SetChild(2, Leaves);
+            root.Children[2].Children[0].Children[1].SetChild(2, Leaves);
+            root.Children[2].Children[1].Children[0].SetChild(3, Leaves);
+            
+            for (int i = 0; i < leavesVal.Count(); i++)
+            {
+                Leaves[i].Value = leavesVal[i];
+            }
+
+            Root.Children.Clear();
+            Root = root;
         }
 
         // Изменение порядка мин/макс
@@ -76,5 +116,6 @@ namespace GamingTreeMinMax
                 leaf.Value = newValue;
             }
         }
+
     }
 }

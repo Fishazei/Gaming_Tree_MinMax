@@ -3,7 +3,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using System.Xml.Linq;
 
 namespace GamingTreeMinMax
 {
@@ -41,6 +40,7 @@ namespace GamingTreeMinMax
         {
             _canvas.Children.Clear();
             Debug.Write("Render start -");
+
             var levels = CalculateNodesByLevel(tree.Root);
             var nodePositions = new Dictionary<TreeElement, (double X, double Y)>();
 
@@ -81,29 +81,49 @@ namespace GamingTreeMinMax
             Debug.Write("- Render end\n");
         }
 
-        private void DrawNode(TreeElement node, double x, double y, double xOffset){
-            // Рисуем круг для узла
-            var ellipse = new Ellipse{
-                Width = 30, Height = 30,
+        private void DrawNode(TreeElement node, double x, double y, double xOffset)
+        {
+            var ellipse = new Ellipse
+            {
+                Width = 30,
+                Height = 30,
                 Fill = node.IsMaxNode ? Brushes.LightBlue : Brushes.LightCoral,
                 Stroke = node.IsPruned ? Brushes.Gray : Brushes.Black,
-                StrokeThickness = node.IsPruned ? 1 : 2
+                StrokeThickness = node.IsOptimalPath ? 4 : 2
             };
             Canvas.SetLeft(ellipse, x - ellipse.Width / 2);
             Canvas.SetTop(ellipse, y - ellipse.Height / 2);
             _canvas.Children.Add(ellipse);
-            // Текстовая метка с оценкой узла
+
+            // Сопутсвтующий текст
             var text = new TextBlock
             {
                 Text = node.Value.HasValue ? node.Value.Value.ToString() : "?",
-                Foreground = Brushes.Black, FontSize = 12,
+                Foreground = Brushes.Black,
+                FontSize = 12,
                 HorizontalAlignment = HorizontalAlignment.Center
             };
-            Canvas.SetLeft(text, x - 10);
-            Canvas.SetTop(text, y - 10);
+            Canvas.SetLeft(text, x - 5);
+            Canvas.SetTop(text, y - 8);
             _canvas.Children.Add(text);
-        }
 
+            // Отображение отсечённых вершин
+            if (node.IsPruned)
+            {
+                var ptext = new TextBlock
+                {
+                    Text = node.PruneReason ?? string.Empty,
+                    Foreground = Brushes.Red,
+                    FontSize = 10,
+                    HorizontalAlignment = HorizontalAlignment.Center
+                };
+                // Смещение текста 
+                Canvas.SetLeft(ptext, x - 10);
+                Canvas.SetTop(ptext, y - 40);
+                _canvas.Children.Add(ptext);
+            }
+        }
+        // Отрисовка линии между узлами
         private void DrawLine(double x1, double y1, double x2, double y2){
             var line = new Line{
                 X1 = x1, Y1 = y1 + 15, 

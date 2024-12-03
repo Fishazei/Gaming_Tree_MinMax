@@ -1,23 +1,13 @@
 ﻿using System.Diagnostics;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace GamingTreeMinMax
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         private Tree _tree;
+        private Tree _solvedTree;
         private TreeRenderer _renderer;
 
         public MainWindow()
@@ -47,7 +37,10 @@ namespace GamingTreeMinMax
         }
         private void LoadTreeButton_Click(object sender, RoutedEventArgs e)
         {
-
+            if (_tree == null) _tree = new Tree(0, 1, 1, true);
+            _tree.LoadTree();
+            _renderer.RenderTree(_tree);
+            PopulateLeafSelector();
         }
         private void ToggleRootPlayer_Click(object sender, RoutedEventArgs e)
         {
@@ -68,7 +61,7 @@ namespace GamingTreeMinMax
             {
                 _tree.UpdateLeafValue(selectedLeaf, newValue);
                 _renderer.RenderTree(_tree); // Перерисовать дерево с обновленным значением
-                //PopulateLeafSelector();
+                PopulateLeafSelector();
             }
             else
             {
@@ -76,21 +69,59 @@ namespace GamingTreeMinMax
             }
         }
 
+        // Переключение отсечений
+        private bool AB = false; 
+        private void AlphaBetaToggle_Checked(object sender, RoutedEventArgs e) => AB = true;
+        private void AlphaBetaToggle_Unchecked(object sender, RoutedEventArgs e) => AB = false;
+        private void AlphaBetaToggle_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (AlphaBetaToggle.IsChecked == true)
+            {
+                // Если уже активен, деактивируем
+                AlphaBetaToggle.IsChecked = false;
+                e.Handled = true; // Предотвращаем стандартное поведение
+            }
+            // В противном случае WPF выполнит стандартное переключение
+        }
+
+        // Переключение порядка обхода
+        private bool LR = false;
+        private void LeftRightToggle_Checked(object sender, RoutedEventArgs e) => LR = true;
+        private void LeftRightToggle_Unchecked(object sender, RoutedEventArgs e) => LR = false;
+        private void LeftRightToggle_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (LeftRightToggle.IsChecked == true)
+            {
+                // Если уже активен, деактивируем
+                LeftRightToggle.IsChecked = false;
+                e.Handled = true; // Предотвращаем стандартное поведение
+            }
+            // В противном случае WPF выполнит стандартное переключение
+        }
+
         private void RunMinimax_Click(object sender, RoutedEventArgs e)
         {
-            if (_tree == null) return;
+            if (_tree == null) return; 
+            _solvedTree = _tree;
 
-            var solver = new MinimaxSolver(_tree.Root, true, 3);
-            solver.Start();
-
-            string info;
-            while (solver.Step(out info))
+            MinimaxSolver solver = new MinimaxSolver(_solvedTree.Root)
             {
-                Debug.WriteLine(info);
-                _renderer.RenderTree(_tree);
+                UseAlphaBeta = AB,
+                AnalyzeRightToLeft = LR
+            };
 
-                //Thread.Sleep(100);
+            // Запускаем решение
+            int result = solver.Solve();
+            solver.MarkOptimalPath(_solvedTree.Root);
+            // Выводим результат
+            Debug.WriteLine($"Результат минимаксного алгоритма: {result}");
+
+            // Выводим причину отсечения для узлов
+            foreach (var pruned in solver.PrunedNodes)
+            {
+                Debug.WriteLine($"Узел отсечён: {pruned.Node}, причина: {pruned.Reason}");
             }
+            _renderer.RenderTree( _solvedTree);
         }
     }
 }

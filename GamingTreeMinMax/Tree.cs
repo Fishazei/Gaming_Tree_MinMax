@@ -36,7 +36,7 @@ namespace GamingTreeMinMax
             else
             {
                 // Случайная оценка листа
-                node.Value = new Random().Next(-100, 100);
+                node.Value = new Random().Next(-15, 15);
                 Leaves.Add(node);
             }
             return node;

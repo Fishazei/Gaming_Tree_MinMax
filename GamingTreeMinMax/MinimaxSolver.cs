@@ -53,7 +53,6 @@ namespace GamingTreeMinMax
             if (node.Children.Count == 0 || depth >= MaxDepth)
             {
                 node.Value = node.Value ?? 0;
-                node.PruneReason = $"α={alpha}, β={beta}";
                 return node.Value.Value;
             }
 
@@ -75,27 +74,16 @@ namespace GamingTreeMinMax
                     beta = Math.Min(beta, bestValue);
                 }
 
-                // Проверяем условие отсечения
                 if (beta <= alpha)
                 {
                     // Помечаем только узлы, которые следуют за текущим узлом
-                    MarkPrunedSubtreeAndSiblings(node, child);
-
-                    // Добавляем текст причины отсечения к первому ребёнку
-                    if (string.IsNullOrEmpty(child.PruneReason))
-                    {
-                        string condition = isMaximizing
-                            ? $"z <= α({alpha})"
-                            : $"z >= β({beta})";
-                        child.PruneReason = $"{condition}";
-                        PrunedNodes.Add((child, child.PruneReason));
-                    }
-
-                    break; // Останавливаем обработку остальных узлов
+                    MarkPrunedSubtreeAndSiblings(node, child, alpha, beta);
+                    break; // Останавливаем дальнейший анализ
                 }
             }
 
             node.Value = bestValue;
+            Debug.WriteLine($"Children order: {string.Join(", ", children.Select(c => c.Value))}");
             return bestValue;
         }
 
@@ -139,20 +127,22 @@ namespace GamingTreeMinMax
         }
 
         // Пометка отсечённых поддеревьев
-        private void MarkPrunedSubtreeAndSiblings(TreeElement parent, TreeElement prunedChild)
+        private void MarkPrunedSubtreeAndSiblings(TreeElement parent, TreeElement prunedChild, int alpha, int beta)
         {
-            // Получаем детей в порядке обхода
+            if (string.IsNullOrEmpty(prunedChild.PruneReason))
+            {
+                string condition = $"α({alpha})\nβ({beta})";
+                parent.PruneReason = $"{condition}";
+            }
+            // Упорядоченные дети
             var orderedChildren = GetOrderedChildren(parent);
             int prunedIndex = orderedChildren.IndexOf(prunedChild);
 
             // Определяем братьев, которые должны быть помечены как отсечённые
             IEnumerable<TreeElement> siblings;
-            if (AnalyzeRightToLeft)
-                siblings = orderedChildren.Take(prunedIndex); // Все перед prunedChild
-            else
-                siblings = orderedChildren.Skip(prunedIndex + 1); // Все после prunedChild
+            siblings = orderedChildren.Skip(prunedIndex + 1); // Узлы после отсечённого
 
-            // Помечаем только братьев и их поддеревья
+            // Рекурсивно помечаем поддеревья как отсечённые
             foreach (var sibling in siblings)
                 MarkPrunedSubtree(sibling);
         }
@@ -173,7 +163,7 @@ namespace GamingTreeMinMax
             if (AnalyzeRightToLeft)
             {
                 children.Reverse();
-                Debug.WriteLine("Reversing childrens");
+                Debug.WriteLine($"Reversing children of node with Value={node.Value}");
             }
             return children;
         }

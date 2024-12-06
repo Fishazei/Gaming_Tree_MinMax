@@ -8,8 +8,8 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid Background="LightGray">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="5*"/>
-            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="8*"/>
+            <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
         <Canvas x:Name="TreeCanvas" Background="White" Grid.Row="1" Margin="10,10,10,10"/>
 

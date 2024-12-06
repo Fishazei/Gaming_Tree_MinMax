@@ -82,7 +82,7 @@ namespace GamingTreeMinMax
             // Сопутсвтующий текст
             var text = new TextBlock
             {
-                Text = node.Value.HasValue ? node.Value.Value.ToString() : "?",
+                Text = node.Value.HasValue ? node.Value.Value.ToString() + " " : "?" + " ",
                 Foreground = Brushes.Black,
                 FontSize = 12,
                 HorizontalAlignment = HorizontalAlignment.Center
@@ -92,21 +92,28 @@ namespace GamingTreeMinMax
             _canvas.Children.Add(text);
 
             // Отображение отсечённых вершин
-            if (node.IsPruned)
-            {
+            if (node.Children != null && CheckChildrens(node))
+            { 
                 var ptext = new TextBlock
                 {
                     Text = node.PruneReason ?? string.Empty,
                     Foreground = Brushes.Red,
-                    FontSize = 10,
+                    FontSize = 12,
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
-                // Смещение текста 
-                Canvas.SetLeft(ptext, x - 10);
-                Canvas.SetTop(ptext, y - 40);
-                _canvas.Children.Add(ptext);
+            // Смещение текста 
+            Canvas.SetLeft(ptext, x - 10);
+            Canvas.SetTop(ptext, y - 48);
+            _canvas.Children.Add(ptext);
             }
         }
+        private bool CheckChildrens(TreeElement c)
+        {
+            foreach (var ci in c.Children)
+                if (ci.IsPruned) return true;
+            return false;
+        }
+
         // Отрисовка линии между узлами
         private void DrawLine(double x1, double y1, double x2, double y2)
         {

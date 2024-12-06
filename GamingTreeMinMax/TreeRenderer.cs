@@ -10,10 +10,8 @@ namespace GamingTreeMinMax
     {
         private Canvas _canvas;
 
-        public TreeRenderer(Canvas canvas)
-        {
-            _canvas = canvas;
-        }
+        public TreeRenderer(Canvas canvas){
+            _canvas = canvas;}
 
         private Dictionary<int, List<TreeElement>> CalculateNodesByLevel(TreeElement root)
         {
@@ -25,15 +23,11 @@ namespace GamingTreeMinMax
         private void TraverseTree(TreeElement node, int level, Dictionary<int, List<TreeElement>> levels)
         {
             if (!levels.ContainsKey(level))
-            {
                 levels[level] = new List<TreeElement>();
-            }
             levels[level].Add(node);
 
             foreach (var child in node.Children)
-            {
                 TraverseTree(child, level + 1, levels);
-            }
         }
 
         public void RenderTree(Tree tree)
@@ -61,23 +55,13 @@ namespace GamingTreeMinMax
             }
 
             foreach (var level in levels)
-            {
                 foreach (var node in level.Value)
-                {
-                    // Получаем позицию текущего узла
+                    // Позиция текущего узла
                     if (nodePositions.TryGetValue(node, out var parentPos))
-                    {
                         foreach (var child in node.Children)
-                        {
                             if (nodePositions.TryGetValue(child, out var childPos))
-                            {
-                                // Добавляем линию между узлом и его дочерним элементом
+                                // Линия между узлом и его дочерним элементом
                                 DrawLine(parentPos.X, parentPos.Y, childPos.X, childPos.Y);
-                            }
-                        }
-                    }
-                }
-            }
             Debug.Write("- Render end\n");
         }
 
@@ -124,8 +108,10 @@ namespace GamingTreeMinMax
             }
         }
         // Отрисовка линии между узлами
-        private void DrawLine(double x1, double y1, double x2, double y2){
-            var line = new Line{
+        private void DrawLine(double x1, double y1, double x2, double y2)
+        {
+            var line = new Line
+            {
                 X1 = x1, Y1 = y1 + 15, 
                 X2 = x2, Y2 = y2 - 15,
                 Stroke = Brushes.Black

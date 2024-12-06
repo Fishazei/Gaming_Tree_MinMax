@@ -30,9 +30,7 @@ namespace GamingTreeMinMax
                 Children.Add(new TreeElement(!IsMaxNode));
                 Children[i].Parent = this;
                 if (forLeaves != null)  // Добавление листьев в список листьев дерева
-                {
                     forLeaves.Add(Children[i]);
-                }
             }
         }
 

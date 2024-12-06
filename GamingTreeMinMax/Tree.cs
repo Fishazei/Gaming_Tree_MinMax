@@ -80,10 +80,7 @@ namespace GamingTreeMinMax
             root.Children[2].Children[1].Children[0].SetChild(3, Leaves);
             
             for (int i = 0; i < leavesVal.Count(); i++)
-            {
                 Leaves[i].Value = leavesVal[i];
-            }
-
             Root.Children.Clear();
             Root = root;
         }
@@ -91,49 +88,40 @@ namespace GamingTreeMinMax
         internal void ToggleRootPlayer()
         {
             if (Root == null) return;
-            //Root.IsMaxNode = !Root.IsMaxNode;
             UpdatePlayerRoles(Root, !Root.IsMaxNode);
             Debug.Write("Changing roles start -\n");
             Debug.Write($"    Is root max now? - {Root.IsMaxNode}\n") ;
         }
+        // Изменение ролей рекурсивное
         private void UpdatePlayerRoles(TreeElement node, bool isMaxNode)
         {
             node.IsMaxNode = isMaxNode;
             foreach (var child in node.Children)
-            {
                 UpdatePlayerRoles(child, !isMaxNode);
-            }
         }
         // Обновление данных в листе
         public void UpdateLeafValue(TreeElement leaf, int newValue)
         {
             if (Leaves.Contains(leaf))
-            {
                 leaf.Value = newValue;
-            }
         }
         // Копирование дерева
         public Tree DeepCopy()
         {
-            // Копируем корень дерева
             var copiedRoot = Root.DeepCopy();
-
-            // Создаём новое дерево
             var copiedTree = new Tree(Depth, BranchingMin, BranchingMax, Root.IsMaxNode)
             {
                 Root = copiedRoot,
                 Leaves = new ObservableCollection<TreeElement>()
             };
 
-            // Копируем листья
+            // Копирование листьев
             foreach (var leaf in Leaves)
             {
-                // Находим соответствующий узел в скопированном дереве
+                // Соответствующий узел в скопированном дереве
                 var copiedLeaf = FindCopiedLeaf(copiedRoot, leaf);
                 if (copiedLeaf != null)
-                {
                     copiedTree.Leaves.Add(copiedLeaf);
-                }
             }
 
             return copiedTree;
@@ -143,7 +131,6 @@ namespace GamingTreeMinMax
         {
             if (copiedNode == null)
                 return null;
-
             if (originalLeaf == copiedNode)
                 return copiedNode;
 
@@ -153,7 +140,6 @@ namespace GamingTreeMinMax
                 if (result != null)
                     return result;
             }
-
             return null;
         }
     }

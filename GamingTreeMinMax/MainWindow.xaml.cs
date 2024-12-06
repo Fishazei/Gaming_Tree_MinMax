@@ -18,15 +18,15 @@ namespace GamingTreeMinMax
 
         private void GenerateTreeButton_Click(object sender, RoutedEventArgs e)
         {
-            // Получаем глубину и степень ветвления из полей ввода
+            // Получение глубины и степени ветвления из полей ввода
             if (int.TryParse(DepthInput.Text, out int depth) && 
                 int.TryParse(BranchingInputMin.Text, out int branchingMin) && 
                 int.TryParse(BranchingInputMax.Text, out int branchingMax))
             {
                 if (branchingMax >= branchingMin)
-                // Создаем дерево с заданными параметрами (начинаем с корня MAX)
-                _tree = new Tree(depth, branchingMin, branchingMax, isMaxRoot: true);
-                // Отрисовываем дерево
+                    // Создание дерева с заданными параметрами (начинаем с корня MAX)
+                    _tree = new Tree(depth, branchingMin, branchingMax, isMaxRoot: true);
+                // Отрисовка дерева
                 _renderer.RenderTree(_tree);
                 PopulateLeafSelector();
             }
@@ -37,7 +37,7 @@ namespace GamingTreeMinMax
         }
         private void LoadTreeButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_tree == null) _tree = new Tree(0, 1, 1, true);
+            if (_tree == null) _tree = new Tree(0, 0, 0, true);
             _tree.LoadTree();
             _renderer.RenderTree(_tree);
             PopulateLeafSelector();
@@ -53,7 +53,7 @@ namespace GamingTreeMinMax
         private void PopulateLeafSelector()
         {
             LeafSelector.ItemsSource = _tree.Leaves;
-            LeafSelector.SelectedIndex = 0; // Выбираем первый лист
+            LeafSelector.SelectedIndex = 0;
         }
         private void UpdateLeafValue_Click(object sender, RoutedEventArgs e)
         {
@@ -64,9 +64,7 @@ namespace GamingTreeMinMax
                 PopulateLeafSelector();
             }
             else
-            {
                 MessageBox.Show("Пожалуйста, выберите лист и введите корректное значение.", "Ошибка");
-            }
         }
 
         // Переключение отсечений
@@ -100,24 +98,25 @@ namespace GamingTreeMinMax
             if (_tree == null) return; 
             _solvedTree = _tree.DeepCopy();
 
+            Debug.WriteLine($"Первый ход за макс: {_solvedTree.Root.IsMaxNode}");
+            Debug.WriteLine($"Обход дерева изменён: {LR}");
+
             MinimaxSolver solver = new MinimaxSolver(_solvedTree.Root)
             {
                 UseAlphaBeta = AB,
                 AnalyzeRightToLeft = LR
             };
 
-            // Запускаем решение
+            // Запуск решения
             int result = solver.Solve();
             solver.MarkOptimalPath(_solvedTree.Root);
-            // Выводим результат
+            // Вывод результата
             Debug.WriteLine($"Результат минимаксного алгоритма: {result}");
 
-            // Выводим причину отсечения для узлов
+            // Вывод причины отсечения для узлов
             foreach (var pruned in solver.PrunedNodes)
-            {
                 Debug.WriteLine($"Узел отсечён: {pruned.Node}, причина: {pruned.Reason}");
-            }
-            _renderer.RenderTree( _solvedTree);
+            _renderer.RenderTree(_solvedTree);
         }
 
     }
